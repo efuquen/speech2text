@@ -12,7 +12,7 @@ type Speech struct {
 }
 
 func HandleRequest(ctx context.Context, speech Speech) (string, error) {
-	return fmt.Sprintf("Handle text %s!", speech.Id), nil
+	return fmt.Sprintf("Handle audio for id %s!", speech.Id), nil
 }
 
 func main() {
