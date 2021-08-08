@@ -1,13 +1,14 @@
+resource "aws_ecr_repository" "speech2text-lambda" {
+  name                 = "speech2text-lambda"
+  image_tag_mutability = "IMMUTABLE"
+}
+
 resource "aws_lambda_function" "speech2text" {
   function_name = "speech2text"
 
-  s3_bucket = aws_s3_bucket.lambda_bucket.id
-  s3_key    = aws_s3_bucket_object.lambda_hello_world.key
-
   runtime = "go1.x"
-  handler = "hello.handler"
-
-  source_code_hash = data.archive_file.lambda_hello_world.output_base64sha256
+  image_uri = "${aws_ecr_repository.speech2text-lambda.repository_url}:latest"
+  package_type = "Image"
 
   role = aws_iam_role.lambda_exec.arn
 }
@@ -30,8 +31,7 @@ resource "aws_iam_role" "lambda_exec" {
       Principal = {
         Service = "lambda.amazonaws.com"
       }
-      }
-    ]
+    }]
   })
 }
 

@@ -1,5 +1,5 @@
 .RECIPEPREFIX = >
-IMAGE_NAME = efuquen/speech2text-handler
+IMAGE_NAME = 239318528382.dkr.ecr.us-west-1.amazonaws.com/speech2text-lambda
 
 build:
 > docker build -t ${IMAGE_NAME} .
