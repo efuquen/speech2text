@@ -1,12 +1,11 @@
 resource "aws_ecr_repository" "speech2text-lambda" {
   name                 = "speech2text-lambda"
-  image_tag_mutability = "IMMUTABLE"
+  image_tag_mutability = "MUTABLE"
 }
 
 resource "aws_lambda_function" "speech2text" {
   function_name = "speech2text"
 
-  runtime = "go1.x"
   image_uri = "${aws_ecr_repository.speech2text-lambda.repository_url}:latest"
   package_type = "Image"
 
@@ -25,7 +24,9 @@ resource "aws_iam_role" "lambda_exec" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeRole"
+      Action = [
+          "sts:AssumeRole",
+      ]
       Effect = "Allow"
       Sid    = ""
       Principal = {
@@ -37,5 +38,5 @@ resource "aws_iam_role" "lambda_exec" {
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
   role       = aws_iam_role.lambda_exec.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
 }
